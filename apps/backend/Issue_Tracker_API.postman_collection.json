@@ -1,0 +1,636 @@
+{
+  "info": {
+    "name": "Issue Tracker API",
+    "description": "Complete API collection for Issue Tracker Backend with CRUD operations and JWT authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "issueId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints - Register, Login, and Get Profile.",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('token', res.token);",
+                  "    console.log('Token saved to collection variable.');",
+                  "}",
+                  "",
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has token', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('token');",
+                  "    pm.expect(res).to.have.property('_id');",
+                  "    pm.expect(res).to.have.property('name');",
+                  "    pm.expect(res).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test('Password is not returned', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.not.have.property('password');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user. On success, the JWT token is automatically saved to the collection variable `token`."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('token', res.token);",
+                  "    console.log('Token saved to collection variable.');",
+                  "}",
+                  "",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has token', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('token');",
+                  "    pm.expect(res).to.have.property('_id');",
+                  "    pm.expect(res).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test('Password is not returned', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.not.have.property('password');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with existing credentials. On success, the JWT token is automatically saved to the collection variable `token`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has user details', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('_id');",
+                  "    pm.expect(res).to.have.property('name');",
+                  "    pm.expect(res).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test('Password is not returned', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.not.have.property('password');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Get the currently logged-in user's profile. Requires JWT token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "description": "Issue CRUD endpoints. All routes require JWT authentication.",
+      "item": [
+        {
+          "name": "Create Issue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('issueId', res._id);",
+                  "    console.log('Issue ID saved:', res._id);",
+                  "}",
+                  "",
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Issue has required fields', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('title');",
+                  "    pm.expect(res).to.have.property('description');",
+                  "    pm.expect(res).to.have.property('status');",
+                  "    pm.expect(res).to.have.property('priority');",
+                  "    pm.expect(res).to.have.property('severity');",
+                  "    pm.expect(res).to.have.property('createdBy');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Login page not responsive\",\n  \"description\": \"The login page layout breaks on mobile screen sizes below 375px\",\n  \"priority\": \"High\",\n  \"severity\": \"Major\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/issues",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues"]
+            },
+            "description": "Create a new issue. The `createdBy` field is set automatically from the JWT token. On success, the issue ID is saved to `issueId` variable."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Issues",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has pagination fields', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('issues');",
+                  "    pm.expect(res).to.have.property('totalIssues');",
+                  "    pm.expect(res).to.have.property('currentPage');",
+                  "    pm.expect(res).to.have.property('totalPages');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "Open",
+                  "disabled": true
+                },
+                {
+                  "key": "priority",
+                  "value": "High",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all issues with optional search, filter, and pagination. Enable disabled query params as needed."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Issues - Search by Title",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues?search=login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "login"
+                }
+              ]
+            },
+            "description": "Search issues by title using case-insensitive regex match."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Issues - Filter by Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues?status=Open",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Open"
+                }
+              ]
+            },
+            "description": "Filter issues by status. Valid values: Open, In Progress, Resolved, Closed."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Issues - Filter by Priority",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues?priority=High",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues"],
+              "query": [
+                {
+                  "key": "priority",
+                  "value": "High"
+                }
+              ]
+            },
+            "description": "Filter issues by priority. Valid values: Low, Medium, High, Critical."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Issue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Issue has all fields', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('title');",
+                  "    pm.expect(res).to.have.property('description');",
+                  "    pm.expect(res).to.have.property('status');",
+                  "    pm.expect(res).to.have.property('priority');",
+                  "    pm.expect(res).to.have.property('severity');",
+                  "    pm.expect(res).to.have.property('createdBy');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues/{{issueId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues", "{{issueId}}"]
+            },
+            "description": "Get a single issue by its ID. Uses the `issueId` variable saved from Create Issue."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue (Full)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Issue was updated', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res.title).to.eql('Login page not responsive - Fixed');",
+                  "    pm.expect(res.status).to.eql('Resolved');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Login page not responsive - Fixed\",\n  \"description\": \"Applied responsive CSS media queries for mobile screens\",\n  \"status\": \"Resolved\",\n  \"priority\": \"Medium\",\n  \"severity\": \"Minor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/issues/{{issueId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues", "{{issueId}}"]
+            },
+            "description": "Update all fields of an issue. Uses the `issueId` variable."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue Status Only",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Status was updated', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res.status).to.eql('Closed');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Closed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/issues/{{issueId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues", "{{issueId}}", "status"]
+            },
+            "description": "Update only the status of an issue. Valid values: Open, In Progress, Resolved, Closed."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Issue Status Counts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has all status counts', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('Open');",
+                  "    pm.expect(res).to.have.property('In Progress');",
+                  "    pm.expect(res).to.have.property('Resolved');",
+                  "    pm.expect(res).to.have.property('Closed');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues/stats/counts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues", "stats", "counts"]
+            },
+            "description": "Get count of issues grouped by status. Returns counts for Open, In Progress, Resolved, and Closed."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Issue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Success message returned', function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res.message).to.eql('Issue deleted successfully');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/issues/{{issueId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "issues", "{{issueId}}"]
+            },
+            "description": "Delete an issue by its ID. Uses the `issueId` variable."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

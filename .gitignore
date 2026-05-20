@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+apps/frontend/dist/
+apps/backend/dist/
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Environment files
+.env
+.env.local
+.env.*.local
+apps/**/.env
+!apps/**/.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
