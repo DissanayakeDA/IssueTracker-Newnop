@@ -8,6 +8,14 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware";
 
 dotenv.config();
 
+const requiredEnvVars = ["JWT_SECRET"] as const;
+for (const key of requiredEnvVars) {
+  if (!process.env[key]) {
+    console.error(`FATAL: Environment variable ${key} is not set. Exiting.`);
+    process.exit(1);
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

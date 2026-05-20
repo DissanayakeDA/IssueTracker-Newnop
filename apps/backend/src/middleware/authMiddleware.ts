@@ -3,6 +3,14 @@ import jwt from "jsonwebtoken";
 import User from "../models/User";
 import logger from "../utils/logger";
 
+const getJwtSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is not set");
+  }
+  return secret;
+};
+
 interface JwtPayload {
   id: string;
 }
@@ -27,10 +35,7 @@ const protect = async (
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, getJwtSecret()) as JwtPayload;
 
     const user = await User.findById(decoded.id).select("-password");
 

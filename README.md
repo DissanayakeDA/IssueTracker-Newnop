@@ -9,9 +9,8 @@ issue-tracker/
 ├── apps/
 │   ├── frontend/       React 18 + Vite + TypeScript + Tailwind CSS
 │   └── backend/        Express.js + TypeScript + MongoDB (Mongoose)
-├── libs/
-│   └── shared-types/   Shared TypeScript interfaces (Issue, User, Auth)
-└── infra/              AWS deployment scripts (S3, CloudFront, Elastic Beanstalk)
+└── libs/
+    └── shared-types/   Shared TypeScript interfaces (Issue, User, Auth)
 ```
 
 ### Tech Stack
@@ -23,7 +22,6 @@ issue-tracker/
 | Database | MongoDB (Atlas) |
 | Auth | JWT (jsonwebtoken), bcryptjs |
 | Monorepo | Nx Workspace |
-| Deployment | AWS S3 + CloudFront (frontend), Elastic Beanstalk (backend) |
 
 ## Features
 
@@ -140,19 +138,6 @@ npm run build
 | mine | boolean | Show only user's issues |
 | page | number | Page number (default: 1) |
 | limit | number | Items per page (default: 10) |
-
-## Deployment
-
-See [infra/DEPLOYMENT.md](infra/DEPLOYMENT.md) for full AWS deployment instructions.
-
-**Quick deploy:**
-```bash
-# Frontend → S3 + CloudFront
-./infra/deploy-frontend.sh issue-tracker-frontend
-
-# Backend → Elastic Beanstalk
-./infra/deploy-backend.sh
-```
 
 ## Project Structure Details
 

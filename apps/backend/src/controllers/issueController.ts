@@ -24,8 +24,12 @@ const isIssueOwner = (
   userId: mongoose.Types.ObjectId
 ): boolean => getCreatedById(issue.createdBy) === userId.toString();
 
-const rejectInvalidIssueId = (id: string, res: Response): boolean => {
-  if (!isValidObjectId(id)) {
+const rejectInvalidIssueId = (
+  id: string | string[],
+  res: Response
+): boolean => {
+  const idStr = Array.isArray(id) ? id[0] : id;
+  if (!isValidObjectId(idStr)) {
     res.status(404).json({ message: "Issue not found" });
     return true;
   }
