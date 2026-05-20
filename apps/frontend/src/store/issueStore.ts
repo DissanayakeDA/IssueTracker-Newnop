@@ -108,6 +108,8 @@ export const useIssueStore = create<IssueState>((set, get) => ({
     try {
       const issue = await issueApi.createIssue(data);
       set({ loading: false });
+      get().fetchStats();
+      get().fetchRecentIssues();
       return issue;
     } catch (err: unknown) {
       const error = err as { message?: string };
@@ -121,6 +123,8 @@ export const useIssueStore = create<IssueState>((set, get) => ({
     try {
       const issue = await issueApi.updateIssue(id, data);
       set({ selectedIssue: issue, loading: false });
+      get().fetchStats();
+      get().fetchRecentIssues();
     } catch (err: unknown) {
       const error = err as { message?: string };
       set({ error: error.message || 'Failed to update issue', loading: false });
@@ -136,6 +140,8 @@ export const useIssueStore = create<IssueState>((set, get) => ({
         issues: state.issues.filter((i) => i._id !== id),
         loading: false,
       }));
+      get().fetchStats();
+      get().fetchRecentIssues();
     } catch (err: unknown) {
       const error = err as { message?: string };
       set({ error: error.message || 'Failed to delete issue', loading: false });
@@ -151,6 +157,8 @@ export const useIssueStore = create<IssueState>((set, get) => ({
         selectedIssue: issue,
         issues: state.issues.map((i) => (i._id === id ? issue : i)),
       }));
+      get().fetchStats();
+      get().fetchRecentIssues();
     } catch (err: unknown) {
       const error = err as { message?: string };
       set({ error: error.message || 'Failed to update status' });

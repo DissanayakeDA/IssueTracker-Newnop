@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+apps/frontend/dist
+apps/backend/dist
+.git
+.nx
+.cache
+tmp
+coverage
+*.local
