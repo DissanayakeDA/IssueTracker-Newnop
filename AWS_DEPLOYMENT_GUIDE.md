@@ -160,7 +160,8 @@ npm run build:backend
 cat > apps/backend/.env << 'EOF'
 PORT=5000
 NODE_ENV=production
-MONGO_URI=mongodb+srv://issuetracker:<password>@cluster0.xxxxx.mongodb.net/issuetracker?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://dumindudissanayake2k01_db_user:ei4ZTfk2cbdNWNG8@cluster0.oq4vqmn.mongodb.net/
+ei4ZTfk2cbdNWNG8
 JWT_SECRET=your-strong-random-secret-minimum-32-chars
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=https://<your-amplify-domain>
@@ -223,7 +224,7 @@ sudo nginx -t          # test config
 sudo systemctl reload nginx
 ```
 
-Now `http://<YOUR_ELASTIC_IP>/api/issues` should return data.
+Now `http://32.199.79.236/api/issues` should return data.
 
 ### 4.8 (Optional) Add a domain + free SSL with Let's Encrypt
 
