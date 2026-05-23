@@ -6,32 +6,14 @@ applications:
       phases:
         preBuild:
           commands:
-            - node --version
-            - npm --version
-            - export NX_DAEMON=false
-            - export NX_CLOUD_ACCESS_TOKEN=
-            - export NX_SKIP_NX_CACHE=true
-            - export CI=true
-            - export HUSKY=0
-            - export ADBLOCK=1
-            - export DISABLE_OPENCOLLECTIVE=1
-            - npm ci --ignore-scripts --no-audit --no-fund --progress=false --loglevel=error
+            - npm ci
         build:
           commands:
-            - npx vite build apps/frontend
+            - npm run build:frontend
       artifacts:
         baseDirectory: apps/frontend/dist
         files:
           - "**/*"
       cache:
         paths:
-          - ~/.npm/**/*
-    redirects:
-      # Trailing-slash paths (e.g. /login/ after S3 redirect) must rewrite first.
-      - source: "/<*>"
-        target: "/index.html"
-        status: "200"
-      # SPA fallback: serve index.html for client-side routes, skip static assets.
-      - source: '</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>'
-        target: "/index.html"
-        status: "200"
+          - node_modules/**/*

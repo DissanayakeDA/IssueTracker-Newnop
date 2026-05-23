@@ -2,6 +2,8 @@
 
 A full-stack issue tracking application built on a modern **Nx monorepo** architecture. The frontend is a React 18 + Vite SPA using Zustand for state management; the backend is a TypeScript Express REST API persisted by MongoDB (Mongoose). Shared TypeScript types are published from an internal library so that the client and server stay in sync.
 
+---
+
 ## Table of Contents
 
 1. [Architecture](#architecture)
@@ -215,7 +217,7 @@ npm run build
 
 - **Create** — Use the **New Issue** button. Title, description, status, priority and severity are required.
 - **Search** — Type in the search box; results refresh after 400 ms of inactivity.
-- **Filter** — Use the status and priority dropdowns.
+- **Filter** — Use the status and priority dropdowns, or toggle **Show only mine**.
 - **Update / Delete** — Available from each row's action menu. Only the issue's owner can mutate it.
 - **Export** — Click **Export CSV** to download the current filtered view.
 
