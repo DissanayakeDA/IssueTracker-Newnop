@@ -1,8 +1,6 @@
 version: 1
 applications:
-  - appRoot: apps/frontend
-    frontend:
-      buildPath: /
+  - frontend:
       phases:
         preBuild:
           commands:
@@ -13,6 +11,7 @@ applications:
             - export NX_DAEMON=false
             - export NX_CLOUD_ACCESS_TOKEN=
             - export NX_SKIP_NX_CACHE=true
+            - export NX_VERBOSE_LOGGING=false
             - export CI=true
             - export HUSKY=0
             - export ADBLOCK=1
