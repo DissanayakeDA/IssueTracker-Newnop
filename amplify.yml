@@ -6,15 +6,14 @@ applications:
       phases:
         preBuild:
           commands:
-            - npm ci --prefer-offline --no-audit --no-fund --progress=false
+            - npm ci
         build:
           commands:
-            - npx nx build frontend
+            - npm run build:frontend
       artifacts:
         baseDirectory: apps/frontend/dist
         files:
           - "**/*"
       cache:
         paths:
-          - .nx/cache/**/*
-          - ~/.npm/**/*
+          - node_modules/**/*
