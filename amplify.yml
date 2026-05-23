@@ -1,34 +1,20 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: apps/frontend
+    frontend:
+      buildPath: /
       phases:
         preBuild:
           commands:
-            - echo "===> Environment info"
-            - node --version
-            - npm --version
-            - echo "===> Disabling Nx daemon/cloud/telemetry"
-            - export NX_DAEMON=false
-            - export NX_CLOUD_ACCESS_TOKEN=
-            - export NX_SKIP_NX_CACHE=true
-            - export NX_VERBOSE_LOGGING=false
-            - export CI=true
-            - export HUSKY=0
-            - export ADBLOCK=1
-            - export DISABLE_OPENCOLLECTIVE=1
-            - echo "===> Installing dependencies (no scripts)"
-            - npm ci --ignore-scripts --no-audit --no-fund --progress=false --loglevel=error
-            - echo "===> Dependencies installed"
+            - npm ci --prefer-offline --no-audit --no-fund --progress=false
         build:
           commands:
-            - echo "===> Starting Vite build"
-            - cd apps/frontend && npx --no-install vite build --logLevel info
-            - echo "===> Vite build finished"
-            - ls apps/frontend/dist
+            - npx nx build frontend
       artifacts:
         baseDirectory: apps/frontend/dist
         files:
           - "**/*"
       cache:
         paths:
+          - .nx/cache/**/*
           - ~/.npm/**/*
