@@ -217,7 +217,7 @@ npm run build
 
 - **Create** — Use the **New Issue** button. Title, description, status, priority and severity are required.
 - **Search** — Type in the search box; results refresh after 400 ms of inactivity.
-- **Filter** — Use the status and priority dropdowns.
+- **Filter** — Use the status and priority dropdowns, or toggle **Show only mine**.
 - **Update / Delete** — Available from each row's action menu. Only the issue's owner can mutate it.
 - **Export** — Click **Export CSV** to download the current filtered view.
 
