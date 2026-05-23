@@ -2,6 +2,8 @@
 
 A full-stack issue tracking application built on a modern **Nx monorepo** architecture. The frontend is a React 18 + Vite SPA using Zustand for state management; the backend is a TypeScript Express REST API persisted by MongoDB (Mongoose). Shared TypeScript types are published from an internal library so that the client and server stay in sync.
 
+---
+
 ## Table of Contents
 
 1. [Architecture](#architecture)
