@@ -28,10 +28,10 @@ applications:
           - ~/.npm/**/*
     redirects:
       # Trailing-slash paths (e.g. /login/ after S3 redirect) must rewrite first.
-      - source: '/<*>/'
-        target: '/index.html'
-        status: '200'
+      - source: "/<*>"
+        target: "/index.html"
+        status: "200"
       # SPA fallback: serve index.html for client-side routes, skip static assets.
       - source: '</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>'
-        target: '/index.html'
-        status: '200'
+        target: "/index.html"
+        status: "200"
