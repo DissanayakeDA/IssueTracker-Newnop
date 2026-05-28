@@ -26,6 +26,8 @@ const strengthMeta = [
   { label: "Strong", color: "bg-emerald-500", text: "text-emerald-600" },
 ];
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function Register() {
   const navigate = useNavigate();
   const { register, loading, error, clearError } = useAuthStore();
@@ -48,6 +50,8 @@ export default function Register() {
     const errors: Record<string, string> = {};
     if (!name.trim()) errors.name = "Name is required";
     if (!email.trim()) errors.email = "Email is required";
+    else if (!emailRegex.test(email.trim()))
+      errors.email = "Email must include @ and be valid";
     if (!password) {
       errors.password = "Password is required";
     } else if (password.length < 9) {
